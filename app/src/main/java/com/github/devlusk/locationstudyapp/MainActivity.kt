@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.devlusk.locationstudyapp.ui.theme.LocationStudyAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -37,16 +38,18 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun AppContent(modifier: Modifier = Modifier) {
+fun AppContent() {
     val context = LocalContext.current
     val locationUtils = LocationUtils(context)
+    val viewModel: LocationViewModel = viewModel()
 
-    LocationScreen(locationUtils, context)
+    LocationScreen(locationUtils, viewModel, context)
 }
 
 @Composable
 fun LocationScreen(
     locationUtils: LocationUtils,
+    viewModel: LocationViewModel,
     context: Context
 ) {
     val permissionRequestLauncher =
