@@ -71,7 +71,7 @@ fun LocationScreen(
                 permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
 
             if (isCoarsePermissionGranted || isFinePermissionGranted) {
-                locationUtils.requestLocationUpdates(viewModel)
+                // TODO
             } else {
                 val shouldShowRationale =
                     ActivityCompat.shouldShowRequestPermissionRationale(
@@ -120,7 +120,7 @@ fun LocationScreen(
             Button(
                 onClick = {
                     if (locationUtils.hasLocationPermission()) {
-                        // Permission granted, update the location
+                        locationUtils.requestLocationUpdates(viewModel)
                     } else {
                         permissionRequestLauncher.launch(
                             arrayOf(
