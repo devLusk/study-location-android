@@ -25,6 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.devlusk.locationstudyapp.ui.theme.LocationStudyAppTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -43,7 +44,11 @@ fun AppContent() {
     val locationUtils = LocationUtils(context)
     val viewModel: LocationViewModel = viewModel()
 
-    LocationScreen(locationUtils, viewModel, context)
+    LocationScreen(
+        locationUtils = locationUtils,
+        viewModel = viewModel,
+        context = context
+    )
 }
 
 @Composable
@@ -52,6 +57,8 @@ fun LocationScreen(
     viewModel: LocationViewModel,
     context: Context
 ) {
+    val location = viewModel.location.value
+
     val permissionRequestLauncher =
         rememberLauncherForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -64,7 +71,7 @@ fun LocationScreen(
                 permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
 
             if (isCoarsePermissionGranted || isFinePermissionGranted) {
-                    // Access granted to location
+                locationUtils.requestLocationUpdates(viewModel)
             } else {
                 val shouldShowRationale =
                     ActivityCompat.shouldShowRequestPermissionRationale(
@@ -104,7 +111,11 @@ fun LocationScreen(
             verticalArrangement = Arrangement.Center
         ) {
 
-            Text("Location not available")
+            if (location != null) {
+                Text("Address ${location.latitude} ${location.longitude}")
+            } else {
+                Text("Location not available")
+            }
 
             Button(
                 onClick = {
