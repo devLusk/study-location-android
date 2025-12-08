@@ -59,6 +59,10 @@ fun LocationScreen(
 ) {
     val location = viewModel.location.value
 
+    val address = location?.let {
+        locationUtils.reverseGeocodeLocation(it)
+    }
+
     val permissionRequestLauncher =
         rememberLauncherForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -71,7 +75,11 @@ fun LocationScreen(
                 permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
 
             if (isCoarsePermissionGranted || isFinePermissionGranted) {
-                // TODO
+                Toast.makeText(
+                    context,
+                    "Location permission granted",
+                    Toast.LENGTH_LONG
+                ).show()
             } else {
                 val shouldShowRationale =
                     ActivityCompat.shouldShowRequestPermissionRationale(
@@ -112,7 +120,8 @@ fun LocationScreen(
         ) {
 
             if (location != null) {
-                Text("Address ${location.latitude} ${location.longitude}")
+                Text("Address: $address")
+                Text("Latitude: ${location.latitude} | Longitude: ${location.longitude}")
             } else {
                 Text("Location not available")
             }
